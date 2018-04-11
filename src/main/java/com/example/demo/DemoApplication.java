@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Component;
 
 @SpringBootApplication
+@EnableJpaAuditing
 @EnableJpaRepositories("com.example.demo.repository")
 public class DemoApplication {
 
@@ -49,26 +51,19 @@ class TestEnvers {
 
   void letsTestIt() {
     Task task = Task.builder()
-        .title("Title")
+        .title("Step 0")
         .value("Some value ohoho")
         .build();
-
-    Task task1 = Task.builder()
-        .title("Title1")
-        .value("Some value ohoho1")
-        .build();
-
     Task savedTask = taskRepository.save(task);
-    Task savedTask1 = taskRepository.save(task1);
 
-    savedTask.setValue("AHAHAHAOHOHOHOHOOWWWWYYEAAH");
-
+    savedTask.setValue("Step 1");
     Task changedTask = taskRepository.save(savedTask);
 
-    changedTask.setTitle("HERE WE HAVE ANOTHER TITLE");
-
+    changedTask.setTitle("Step 2");
     changedTask = taskRepository.save(changedTask);
-    taskRepository.delete(savedTask1);
+
+    taskRepository.delete(changedTask);
+
     System.out.println(changedTask);
   }
 

@@ -1,6 +1,7 @@
 package com.example.demo.domain;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name = "task")
@@ -22,11 +25,18 @@ import org.hibernate.envers.Audited;
 @ToString
 @Audited(withModifiedFlag = true)
 public class Task implements Serializable {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  Long id;
+  private Long id;
 
-  String title;
+  @CreatedDate
+  private LocalDateTime createdDate;
 
-  String value;
+  @LastModifiedDate
+  private LocalDateTime lastModifyDate;
+
+  private String title;
+
+  private String value;
 }
