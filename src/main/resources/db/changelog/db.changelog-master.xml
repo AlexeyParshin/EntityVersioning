@@ -1,27 +1,79 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-  <changeSet author="Aleksei_Parshin (generated)" id="1523449530069-1">
-    <dropForeignKeyConstraint baseTableName="TASK_AUD" constraintName="FK1SE4YL6EXURY93LNHC1QYFF5E"/>
-  </changeSet>
-  <changeSet author="Aleksei_Parshin (generated)" id="1523449530069-2">
-    <dropForeignKeyConstraint baseTableName="REVCHANGES" constraintName="FK9M2HKXRK7O2K0N7TM5QX949S1"/>
-  </changeSet>
-  <changeSet author="Aleksei_Parshin (generated)" id="1523449530069-3">
-    <dropForeignKeyConstraint baseTableName="TASK_AUD" constraintName="FKAERB34SJRAIW4VJH4OH46RB71"/>
-  </changeSet>
-  <changeSet author="Aleksei_Parshin (generated)" id="1523449530069-4">
-    <dropTable tableName="REVCHANGES"/>
-  </changeSet>
-  <changeSet author="Aleksei_Parshin (generated)" id="1523449530069-5">
-    <dropTable tableName="REVINFO"/>
-  </changeSet>
-  <changeSet author="Aleksei_Parshin (generated)" id="1523449530069-6">
-    <dropTable tableName="TASK"/>
-  </changeSet>
-  <changeSet author="Aleksei_Parshin (generated)" id="1523449530069-7">
-    <dropTable tableName="TASK_AUD"/>
-  </changeSet>
-  <changeSet author="Aleksei_Parshin (generated)" id="1523449530069-8">
-    <dropTable tableName="USER"/>
-  </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-1">
+        <createTable tableName="REVCHANGES">
+            <column name="REV" type="INT(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTITYNAME" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-2">
+        <createTable tableName="REVINFO">
+            <column autoIncrement="true" name="REV" type="INT(10)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_6"/>
+            </column>
+            <column name="REVTSTMP" type="BIGINT(19)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-3">
+        <createTable tableName="TASK">
+            <column autoIncrement="true" name="ID" type="BIGINT(19)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_2"/>
+            </column>
+            <column name="TITLE" type="VARCHAR(255)"/>
+            <column name="VALUE" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-4">
+        <createTable tableName="TASK_AUD">
+            <column name="ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REV" type="INT(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REVTYPE" type="TINYINT(3)"/>
+            <column name="REVEND" type="INT(10)"/>
+            <column name="TITLE" type="VARCHAR(255)"/>
+            <column name="TITLE_MOD" type="BOOLEAN(1)"/>
+            <column name="VALUE" type="VARCHAR(255)"/>
+            <column name="VALUE_MOD" type="BOOLEAN(1)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-5">
+        <createTable tableName="USER">
+            <column autoIncrement="true" name="ID" type="BIGINT(19)">
+                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_27"/>
+            </column>
+            <column name="EMAIL" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-6">
+        <addPrimaryKey columnNames="ID, REV" constraintName="CONSTRAINT_1" tableName="TASK_AUD"/>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-7">
+        <createIndex indexName="FK1SE4YL6EXURY93LNHC1QYFF5E_INDEX_1" tableName="TASK_AUD">
+            <column name="REVEND"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-8">
+        <createIndex indexName="FK9M2HKXRK7O2K0N7TM5QX949S1_INDEX_7" tableName="REVCHANGES">
+            <column name="REV"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-9">
+        <createIndex indexName="FKAERB34SJRAIW4VJH4OH46RB71_INDEX_1" tableName="TASK_AUD">
+            <column name="REV"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-10">
+        <addForeignKeyConstraint baseColumnNames="REVEND" baseTableName="TASK_AUD" constraintName="FK1SE4YL6EXURY93LNHC1QYFF5E" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="REV" referencedTableName="REVINFO"/>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-11">
+        <addForeignKeyConstraint baseColumnNames="REV" baseTableName="REVCHANGES" constraintName="FK9M2HKXRK7O2K0N7TM5QX949S1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="REV" referencedTableName="REVINFO"/>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-12">
+        <addForeignKeyConstraint baseColumnNames="REV" baseTableName="TASK_AUD" constraintName="FKAERB34SJRAIW4VJH4OH46RB71" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="REV" referencedTableName="REVINFO"/>
+    </changeSet>
 </databaseChangeLog>
