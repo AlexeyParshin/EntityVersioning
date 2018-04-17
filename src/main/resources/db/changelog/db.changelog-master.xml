@@ -1,22 +1,61 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-1">
-        <createTable tableName="REVCHANGES">
-            <column name="REV" type="INT(10)">
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-1">
+        <createSequence sequenceName="JV_COMMIT_PK_SEQ"/>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-2">
+        <createSequence sequenceName="JV_GLOBAL_ID_PK_SEQ"/>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-3">
+        <createSequence sequenceName="JV_SNAPSHOT_PK_SEQ"/>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-4">
+        <createTable tableName="JV_COMMIT">
+            <column name="COMMIT_PK" type="BIGINT(19)">
                 <constraints nullable="false"/>
             </column>
-            <column name="ENTITYNAME" type="VARCHAR(255)"/>
+            <column name="AUTHOR" type="VARCHAR(200)"/>
+            <column name="COMMIT_DATE" type="TIMESTAMP"/>
+            <column name="COMMIT_ID" type="DECIMAL(22, 2)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-2">
-        <createTable tableName="REVINFO">
-            <column autoIncrement="true" name="REV" type="INT(10)">
-                <constraints primaryKey="true" primaryKeyName="CONSTRAINT_6"/>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-5">
+        <createTable tableName="JV_COMMIT_PROPERTY">
+            <column name="PROPERTY_NAME" type="VARCHAR(191)">
+                <constraints nullable="false"/>
             </column>
-            <column name="REVTSTMP" type="BIGINT(19)"/>
+            <column name="PROPERTY_VALUE" type="VARCHAR(600)"/>
+            <column name="COMMIT_FK" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
-    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-3">
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-6">
+        <createTable tableName="JV_GLOBAL_ID">
+            <column name="GLOBAL_ID_PK" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOCAL_ID" type="VARCHAR(191)"/>
+            <column name="FRAGMENT" type="VARCHAR(200)"/>
+            <column name="TYPE_NAME" type="VARCHAR(200)"/>
+            <column name="OWNER_ID_FK" type="BIGINT(19)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-7">
+        <createTable tableName="JV_SNAPSHOT">
+            <column name="SNAPSHOT_PK" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" type="VARCHAR(200)"/>
+            <column name="VERSION" type="BIGINT(19)"/>
+            <column name="STATE" type="CLOB"/>
+            <column name="CHANGED_PROPERTIES" type="CLOB"/>
+            <column name="MANAGED_TYPE" type="VARCHAR(200)"/>
+            <column name="GLOBAL_ID_FK" type="BIGINT(19)"/>
+            <column name="COMMIT_FK" type="BIGINT(19)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-8">
         <createTable tableName="TASK">
             <column autoIncrement="true" name="ID" type="BIGINT(19)">
                 <constraints primaryKey="true" primaryKeyName="CONSTRAINT_2"/>
@@ -25,23 +64,7 @@
             <column name="VALUE" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-4">
-        <createTable tableName="TASK_AUD">
-            <column name="ID" type="BIGINT(19)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="REV" type="INT(10)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="REVTYPE" type="TINYINT(3)"/>
-            <column name="REVEND" type="INT(10)"/>
-            <column name="TITLE" type="VARCHAR(255)"/>
-            <column name="TITLE_MOD" type="BOOLEAN(1)"/>
-            <column name="VALUE" type="VARCHAR(255)"/>
-            <column name="VALUE_MOD" type="BOOLEAN(1)"/>
-        </createTable>
-    </changeSet>
-    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-5">
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-9">
         <createTable tableName="USER">
             <column autoIncrement="true" name="ID" type="BIGINT(19)">
                 <constraints primaryKey="true" primaryKeyName="CONSTRAINT_27"/>
@@ -49,31 +72,64 @@
             <column name="EMAIL" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-6">
-        <addPrimaryKey columnNames="ID, REV" constraintName="CONSTRAINT_1" tableName="TASK_AUD"/>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-10">
+        <addPrimaryKey columnNames="COMMIT_PK" constraintName="JV_COMMIT_PK" tableName="JV_COMMIT"/>
     </changeSet>
-    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-7">
-        <createIndex indexName="FK1SE4YL6EXURY93LNHC1QYFF5E_INDEX_1" tableName="TASK_AUD">
-            <column name="REVEND"/>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-11">
+        <addPrimaryKey columnNames="COMMIT_FK, PROPERTY_NAME" constraintName="JV_COMMIT_PROPERTY_PK" tableName="JV_COMMIT_PROPERTY"/>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-12">
+        <addPrimaryKey columnNames="GLOBAL_ID_PK" constraintName="JV_GLOBAL_ID_PK" tableName="JV_GLOBAL_ID"/>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-13">
+        <addPrimaryKey columnNames="SNAPSHOT_PK" constraintName="JV_SNAPSHOT_PK" tableName="JV_SNAPSHOT"/>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-14">
+        <createIndex indexName="JV_COMMIT_COMMIT_ID_IDX" tableName="JV_COMMIT">
+            <column name="COMMIT_ID"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-8">
-        <createIndex indexName="FK9M2HKXRK7O2K0N7TM5QX949S1_INDEX_7" tableName="REVCHANGES">
-            <column name="REV"/>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-15">
+        <createIndex indexName="JV_COMMIT_PROPERTY_COMMIT_FK_IDX" tableName="JV_COMMIT_PROPERTY">
+            <column name="COMMIT_FK"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-9">
-        <createIndex indexName="FKAERB34SJRAIW4VJH4OH46RB71_INDEX_1" tableName="TASK_AUD">
-            <column name="REV"/>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-16">
+        <createIndex indexName="JV_COMMIT_PROPERTY_PROPERTY_NAME_PROPERTY_VALUE_IDX" tableName="JV_COMMIT_PROPERTY">
+            <column name="PROPERTY_NAME"/>
+            <column name="PROPERTY_VALUE"/>
         </createIndex>
     </changeSet>
-    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-10">
-        <addForeignKeyConstraint baseColumnNames="REVEND" baseTableName="TASK_AUD" constraintName="FK1SE4YL6EXURY93LNHC1QYFF5E" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="REV" referencedTableName="REVINFO"/>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-17">
+        <createIndex indexName="JV_GLOBAL_ID_LOCAL_ID_IDX" tableName="JV_GLOBAL_ID">
+            <column name="LOCAL_ID"/>
+        </createIndex>
     </changeSet>
-    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-11">
-        <addForeignKeyConstraint baseColumnNames="REV" baseTableName="REVCHANGES" constraintName="FK9M2HKXRK7O2K0N7TM5QX949S1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="REV" referencedTableName="REVINFO"/>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-18">
+        <createIndex indexName="JV_GLOBAL_ID_OWNER_ID_FK_INDEX_A" tableName="JV_GLOBAL_ID">
+            <column name="OWNER_ID_FK"/>
+        </createIndex>
     </changeSet>
-    <changeSet author="Aleksei_Parshin (generated)" id="1523462353842-12">
-        <addForeignKeyConstraint baseColumnNames="REV" baseTableName="TASK_AUD" constraintName="FKAERB34SJRAIW4VJH4OH46RB71" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="REV" referencedTableName="REVINFO"/>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-19">
+        <createIndex indexName="JV_SNAPSHOT_COMMIT_FK_IDX" tableName="JV_SNAPSHOT">
+            <column name="COMMIT_FK"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-20">
+        <createIndex indexName="JV_SNAPSHOT_GLOBAL_ID_FK_INDEX_5" tableName="JV_SNAPSHOT">
+            <column name="GLOBAL_ID_FK"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-21">
+        <addForeignKeyConstraint baseColumnNames="COMMIT_FK" baseTableName="JV_COMMIT_PROPERTY" constraintName="JV_COMMIT_PROPERTY_COMMIT_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="COMMIT_PK" referencedTableName="JV_COMMIT"/>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-22">
+        <addForeignKeyConstraint baseColumnNames="OWNER_ID_FK" baseTableName="JV_GLOBAL_ID" constraintName="JV_GLOBAL_ID_OWNER_ID_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="GLOBAL_ID_PK" referencedTableName="JV_GLOBAL_ID"/>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-23">
+        <addForeignKeyConstraint baseColumnNames="COMMIT_FK" baseTableName="JV_SNAPSHOT" constraintName="JV_SNAPSHOT_COMMIT_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="COMMIT_PK" referencedTableName="JV_COMMIT"/>
+    </changeSet>
+    <changeSet author="Aleksei_Parshin (generated)" id="1523965074349-24">
+        <addForeignKeyConstraint baseColumnNames="GLOBAL_ID_FK" baseTableName="JV_SNAPSHOT" constraintName="JV_SNAPSHOT_GLOBAL_ID_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="GLOBAL_ID_PK" referencedTableName="JV_GLOBAL_ID"/>
     </changeSet>
 </databaseChangeLog>
