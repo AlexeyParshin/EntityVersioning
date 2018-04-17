@@ -48,6 +48,8 @@ public class TaskRevisionController {
   @DeleteMapping(value = "/tasks/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteTask(@PathVariable Long id){
+    Task task = taskService.getTaskById(id);
+    revisionService.commitChanges("SOME AUTHOR AHAHAOWWYEAHH", task, "comment", "udalyayu eto");
     taskService.deleteTask(id);
   }
 
